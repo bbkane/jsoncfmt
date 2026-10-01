@@ -1,0 +1,21 @@
+# EXAMPLE USAGE:
+#
+#   Refer to explanation at:
+#   https://github.com/evilmartians/lefthook/blob/master/docs/configuration.md
+
+pre-commit:
+  commands:
+    cargo-check:
+      run: cargo check --all-targets --all-features
+    cargo-clippy:
+      run: cargo clippy --all-targets --all-features -- -D warnings
+    cargo-fmt:
+      run: cargo fmt --check
+    cargo-test:
+      run: cargo test
+    taplo-fmt:
+      run: taplo fmt --check
+    yamllint:
+      run: yamllint .
+  fail_on_changes: always
+  parallel: true

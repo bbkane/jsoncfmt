@@ -1,0 +1,70 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
+
+archives:
+  - format_overrides:
+      - formats:
+          - zip
+        goos: windows
+    formats:
+      - tar.gz
+    id: archives
+    name_template: '{{ .ProjectName }}_ {{- title .Os }}_ {{- if eq .Arch "amd64" }}x86_64 {{- else if eq .Arch "386" }}i386 {{- else }}{{ .Arch }}{{ end }}'
+before:
+  hooks:
+    # Setup Rust environment for cross-compilation
+    - rustup default stable
+    - cargo install --locked cargo-zigbuild
+    - cargo fetch --locked
+builds:
+  - builder: rust
+    flags:
+      - --release
+      - --locked
+    targets:
+      - x86_64-unknown-linux-gnu
+      - x86_64-apple-darwin
+      - x86_64-pc-windows-gnu
+      - aarch64-unknown-linux-gnu
+      - aarch64-apple-darwin
+changelog:
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+  sort: asc
+checksum:
+  algorithm: sha256
+  name_template: checksums.txt
+# https://goreleaser.com/customization/publish/homebrew_casks/
+homebrew_casks:
+  - binaries:
+      - jsoncfmt
+    caveats: |
+      Unfortunately, Apple wants to charge developers $100/year to distribute
+      their apps without a big scary "... the developer cannot be verified"
+      warning. I'm not willing to pay that to give away free apps.
+      See https://www.macworld.com/article/3140183/how-to-install-an-app-in-macos-sierra-thats-not-signed-by-a-developer.html to work around that
+    description: Example Rust CLI to model tooling
+    generate_completions_from_executable:
+      args:
+        - completion
+      executable: jsoncfmt
+    homepage: https://github.com/bbkane/jsoncfmt
+    hooks:
+      post:
+        install: |
+          system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/jsoncfmt"] if OS.mac?
+    repository:
+      name: homebrew-tap
+      owner: bbkane
+      token: '{{ .Env.KEY_GITHUB_GORELEASER_TO_HOMEBREW_TAP }}'
+# https://goreleaser.com/customization/publish/scoop/
+scoops:
+  - description: Example Rust CLI to model tooling
+    homepage: https://github.com/bbkane/jsoncfmt
+    repository:
+      name: scoop-bucket
+      owner: bbkane
+      token: '{{ .Env.KEY_GITHUB_GORELEASER_TO_HOMEBREW_TAP }}'
+version: 2

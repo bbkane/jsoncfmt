@@ -1,0 +1,43 @@
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+  release:
+    name: Release
+    needs: ci
+    runs-on: ubuntu-latest
+    steps:
+      # https://github.com/marketplace/actions/checkout
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # https://github.com/dtolnay/rust-toolchain
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-unknown-linux-gnu,x86_64-apple-darwin,x86_64-pc-windows-gnu,aarch64-unknown-linux-gnu,aarch64-apple-darwin
+      # https://github.com/mlugg/setup-zig
+      - name: Install Zig
+        uses: mlugg/setup-zig@v2
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+      - name: Install cargo-zigbuild
+        run: cargo install --locked cargo-zigbuild
+      - name: Write Release Notes
+        run: echo 'See [CHANGELOG](${{ github.server_url }}/${{ github.repository }}/blob/master/CHANGELOG.md)' > /tmp/release_notes.md
+      # https://github.com/marketplace/actions/goreleaser-action
+      - env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          KEY_GITHUB_GORELEASER_TO_HOMEBREW_TAP: ${{ secrets.KEY_GITHUB_GORELEASER_TO_HOMEBREW_TAP }}
+        name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          args: release --clean --release-notes /tmp/release_notes.md
+          version: latest
+name: Release
+on: # yamllint disable-line rule:truthy
+  push:
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+
+permissions:
+  contents: write

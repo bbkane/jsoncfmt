@@ -1,0 +1,17 @@
+extends: default
+ignore:
+  - dist/
+  - target/
+rules:
+  comments:
+    ignore-shebangs: true
+    min-spaces-from-content: 1
+    require-starting-space: true
+  document-start: disable
+  key-duplicates: disable
+  key-ordering: enable
+  line-length: disable
+  quoted-strings:
+    quote-type: single
+    required: only-when-needed
+  trailing-spaces: disable
