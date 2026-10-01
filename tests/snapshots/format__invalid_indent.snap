@@ -1,0 +1,18 @@
+---
+source: tests/format.rs
+info:
+  program: jsoncfmt
+  args:
+    - format
+    - "--indent-width"
+    - "0"
+    - tests/fixtures/comments.jsonc
+---
+success: false
+exit_code: 2
+----- stdout -----
+
+----- stderr -----
+error: invalid value '0' for '--indent-width <INDENT_WIDTH>': 0 is not in 1..=255
+
+For more information, try '--help'.

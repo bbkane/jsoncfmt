@@ -1,0 +1,14 @@
+---
+source: tests/format.rs
+info:
+  program: jsoncfmt
+  args:
+    - format
+    - tests/fixtures/does-not-exist.jsonc
+---
+success: false
+exit_code: 1
+----- stdout -----
+
+----- stderr -----
+error: failed to read 'tests/fixtures/does-not-exist.jsonc': No such file or directory (os error 2)

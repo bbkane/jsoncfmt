@@ -1,0 +1,41 @@
+---
+source: tests/format.rs
+info:
+  program: jsoncfmt
+  args:
+    - format
+    - tests/fixtures/comments.jsonc
+---
+success: true
+exit_code: 0
+----- stdout -----
+// file header
+{
+  // alpha comment separated by a blank line
+  "alpha": {
+    "one": 1,
+    "two": 2,
+  },
+  "\u0062eta": true,
+  "duplicate": "first",
+  "duplicate": "second",
+  "emptyArray": [],
+  "emptyObject": {},
+  "interior" /* key comment */: /* value comment */ {
+    "left": 1,
+    "right": 2,
+  },
+  "items": [
+    {
+      /* charlie block comment */
+      "charlie": 3,
+      "delta": 4,
+    },
+    2,
+  ],
+  "zebra": 1, // same-line zebra comment
+  // object footer
+}
+// file footer
+
+----- stderr -----

@@ -1,0 +1,13 @@
+---
+source: tests/format.rs
+info:
+  program: jsoncfmt
+  args:
+    - version
+---
+success: true
+exit_code: 0
+----- stdout -----
+v0.0.1
+
+----- stderr -----

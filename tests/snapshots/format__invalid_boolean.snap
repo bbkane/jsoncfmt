@@ -1,0 +1,19 @@
+---
+source: tests/format.rs
+info:
+  program: jsoncfmt
+  args:
+    - format
+    - "--sort-keys"
+    - sometimes
+    - tests/fixtures/comments.jsonc
+---
+success: false
+exit_code: 2
+----- stdout -----
+
+----- stderr -----
+error: invalid value 'sometimes' for '--sort-keys <SORT_KEYS>'
+  [possible values: true, false]
+
+For more information, try '--help'.

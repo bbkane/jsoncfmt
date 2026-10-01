@@ -1,0 +1,25 @@
+---
+source: tests/format.rs
+info:
+  program: jsoncfmt
+  args:
+    - format
+    - "--help"
+---
+success: true
+exit_code: 0
+----- stdout -----
+Format a JSONC file
+
+Usage: jsoncfmt format [OPTIONS] <FILE>
+
+Arguments:
+  <FILE>  Path to the JSONC file to format
+
+Options:
+  -s, --sort-keys <SORT_KEYS>        Sort object keys recursively [default: true] [possible values: true, false]
+  -i, --in-place <IN_PLACE>          Replace the input file instead of writing to stdout [default: false] [possible values: true, false]
+      --indent-width <INDENT_WIDTH>  Number of spaces per indentation level [default: 2]
+  -h, --help                         Print help
+
+----- stderr -----
