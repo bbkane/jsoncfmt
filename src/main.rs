@@ -80,7 +80,7 @@ fn format_file(args: FormatArgs) -> Result<(), String> {
         let target = &args
             .file
             .canonicalize()
-            .map_err(|error| format!("failed to resolve '{}': {error}", &args.file.display()))?;
+            .map_err(|error| format!("failed to resolve '{}': {error}", args.file.display()))?;
         let mut output = AtomicWriteFile::open(target)
             .map_err(|error| format!("failed to open '{}': {error}", target.display()))?;
         output
